@@ -36,10 +36,13 @@ def model_init(model, lr, momentum, weight_decay):
     opt = SGD(learning_rate=lr, momentum=momentum, weight_decay=weight_decay)
     # opt = Adam()
 
-    def my_learning_rate(epoch, lrate):
-        return lrate
+    # Define a custom learning rate schedule function
+    def lr_schedule(epoch, lr):
+        if epoch % 8 == 0 and epoch > 0:
+            return lr * 0.5  # Reduce learning rate by half every 10 epochs
+        return lr  # Otherwise, keep the learning rate the same
 
-    lrs = LearningRateScheduler(my_learning_rate)
+    lrs = LearningRateScheduler(lr_schedule)
 
     model.compile(
         optimizer=opt,
